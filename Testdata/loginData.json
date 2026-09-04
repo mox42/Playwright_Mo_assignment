@@ -1,0 +1,26 @@
+{
+  "validUser": {
+    "username": "standard_user",
+    "password": "secret_sauce"
+  },
+  "invalidLoginScenarios": [
+    {
+      "scenarioName": "No Username",
+      "username": "",
+      "password": "secret_sauce",
+      "expectedError": "Epic sadface: Username is required"
+    },
+    {
+      "scenarioName": "No Password",
+      "username": "standard_user",
+      "password": "",
+      "expectedError": "Epic sadface: Password is required"
+    },
+    {
+      "scenarioName": "Invalid Credentials",
+      "username": "invalid_user",
+      "password": "wrong_password",
+      "expectedError": "Epic sadface: Username and password do not match any user in this service"
+    }
+  ]
+}
