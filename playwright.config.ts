@@ -15,7 +15,7 @@ export default defineConfig({
   //Opt out of parallel tests on CI.
   use: {
     trace: 'on-first-retry',
-    headless: true,
+    headless: false,
     launchOptions: {
       args: ['--start-maximized'],
     },
@@ -37,13 +37,10 @@ export default defineConfig({
       },
     },
     
-  
-  
-
-   // {
-  //    name: 'firefox',
-   //   use: { ...devices['Desktop Firefox'] },
-   // },
+    {
+    name: 'firefox',
+    use: { ...devices['Desktop Firefox'] },
+    },
 
    // {
    //   name: 'webkit',
