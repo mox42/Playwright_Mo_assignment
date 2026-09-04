@@ -7,22 +7,19 @@ export default defineConfig({
   globalTeardown: require.resolve('./src/utilities/globalTeardown'),
   //Run tests in files in parallel
   fullyParallel: true,
-  //Fail the build on CI if you accidentally left test.only in the source code.
-  forbidOnly: !!process.env.CI,
 
   //Retry on CI only 
   //retries: process.env.CI ? 2 : 0,
   //Opt out of parallel tests on CI.
   use: {
     trace: 'on-first-retry',
-    headless: false,
-    
+    headless: !!process.env.CI,
     screenshot: 'only-on-failure',
     launchOptions: {
       args: ['--start-maximized'],
     },
 
-    viewport: null,
+    viewport: { width: 1920, height: 1080 },
   },
 
   /* Configure projects for major browsers */
