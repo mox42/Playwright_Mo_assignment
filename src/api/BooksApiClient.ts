@@ -1,12 +1,5 @@
 import { APIRequestContext } from '@playwright/test';
 
-/**
- * BooksApiClient
- * --------------
- * Thin wrapper around Playwright's native `APIRequestContext` for the
- * Simple Books API (https://simple-books-api.click). Centralizes endpoint
- * paths and payload shapes so tests read like business steps, not raw HTTP.
- */
 export class BooksApiClient {
   private readonly request: APIRequestContext;
   readonly baseUrl = 'https://simple-books-api.click';

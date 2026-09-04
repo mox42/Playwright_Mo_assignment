@@ -1,10 +1,7 @@
-
-
 /**
  * Generates a random alphanumeric string of the given length.
  * param length number of characters to generate (default: 8)
  */
-
 
 export function generateRandomString(length: number = 8): string {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';

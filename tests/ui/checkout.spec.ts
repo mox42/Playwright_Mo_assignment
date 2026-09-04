@@ -47,7 +47,5 @@ test.describe('SauceDemo - End-to-End Checkout Flow', () => {
     expect(await checkoutPage.getCompleteBodyText()).toContain('Your order has been dispatched');
   });
 
-
-
   });
 

@@ -40,21 +40,75 @@ npm -v
 | Command | Description |
 |---|---|
 | `npx playwright test` | Run the full suite (UI + API) on all configured projects |
-| `npm run test:ui` | Run UI tests only (Chromium + Firefox) |
-| `npm run test:api` | Run API tests only |
-| `npm run test:chromium` | Run UI tests on Chromium only |
-| `npm run test:firefox` | Run UI tests on Firefox only |
-| `npm run test:headed` | Run tests in headed (visible browser) mode |
+| `npx playwright test --ui` | Run UI tests only (Chromium + Firefox) |
+| `npx playwright test --project=chromium` | Run UI tests on Chromium only |
+| `npx playwright test --project=firefox` | Run UI tests on Firefox only |
+| `npx playwright test --headed` | Run tests in headed (visible browser) mode |
 
 Run a single spec file, e.g.:
 ```bash
 npx playwright test tests/ui/checkout.spec.ts
 ```
+`
 
-## 6. Viewing Reports
-After a run, an HTML report is generated at `playwright-report/html-report/`. Open it with:
+## 6. Architecture Structure
+```
+playwright-automation/
+├── .github/
+│   └── workflows/
+│       └── playwright.yml       # CI/CD: runs suite on push to main + daily at 3AM Jordan time
+├── TestData/
+│   └── loginData.json           # External data source for data-driven login tests
+├── src/
+│   ├── api/
+│   │   └── BooksApiClient.ts    # Wraps Simple Books API endpoints (auth, orders)
+│   ├── fixtures/
+│   │   └── pageFixtures.ts      # Custom Playwright fixtures that auto-inject Page Objects
+│   ├── pages/
+│   │   ├── BasePage.ts          # Shared base class for all Page Objects
+│   │   ├── LoginPage.ts         # Login screen locators & actions
+│   │   ├── ProductsPage.ts      # Inventory listing + "most expensive product" logic
+│   │   ├── CartPage.ts          # Shopping cart screen
+│   │   └── CheckoutPage.ts      # Checkout info form + order overview + completion
+│   └── utilities/
+│       ├── randomDataGenerator.ts  # Random strings/emails/numbers for dynamic test data
+│       ├── logger.ts               # Suite start/finish console logging helpers
+│       ├── globalSetup.ts          # Registered in playwright.config.ts - logs suite start
+│       └── globalTeardown.ts       # Registered in playwright.config.ts - logs suite finish
+├── tests/
+│   ├── ui/
+│   │   ├── validlogin.spec.ts      # TC_UI_001 - Valid Login
+│   │   ├── invalidLogin.spec.ts    # TC_UI_002 - Data-Driven Invalid Login
+│   │   └── checkout.spec.ts        # TC_UI_003 - End-to-End Checkout Flow
+│   └── api/
+│       └── apiTest.spec.ts         # TC_API_001 & TC_API_002 - Create & Fetch Order
+├── playwright-report/
+│   └── index.html/               # Generated Playwright HTML report (git-ignored)
+├── playwright.config.ts          # Browsers, projects, reporters, global setup/teardown
+├── tsconfig.json
+├── package.json
+└── .gitignore
+```
+
+## 7. Test Scenarios
+
+### UI Test Cases
+| TC ID | Module | Test Name | Verifications |
+|---|---|---|---|
+| TC_UI_001 | Login | Valid Login | Valid credentials log in successfully and land on the Products page |
+| TC_UI_002 | Login | Data-Driven Invalid Login Validation | No Username / No Password / Invalid Credentials each show the correct validation error, driven from `Testdata/loginData.json` |
+| TC_UI_003 | Checkout | End-to-End Checkout Flow | Dynamically adds the 2 most expensive products, validates the pre-tax "Items total" is mathematically correct, completes checkout and asserts the order confirmation messages |
+
+### API Test Cases
+| TC ID | Module | Test Name | Verifications |
+|---|---|---|---|
+| TC_API_001 | Auth & Orders | [POST] Create New Book Order | Registers a dynamic API client to obtain a Bearer token, submits an order, asserts `201 Created` and a valid `orderId` in the response |
+| TC_API_002 | Orders | [GET] Fetch Created Order | Retrieves the order created in TC_API_001, asserts `200 OK` and that `bookId`/`customerName` match what was submitted |
+
+## 8. Viewing Reports
+After a run, an HTML report is generated at `playwright-report/index.html`. Open it with:
 ```bash
-npm run report
+npx playwright show-report
 ```
 This launches a local server and opens the interactive report (test results, traces, screenshots, and videos for any failures) in your default browser.
 

@@ -1,8 +1,5 @@
 import { test, expect } from '../../src/fixtures/pageFixtures';
-
 import loginData from '../../Testdata/loginData.json';
-
-
 
 test.describe('SauceDemo - Invalid Login Validation', () => {
   for (const scenario of loginData.invalidLoginScenarios) {

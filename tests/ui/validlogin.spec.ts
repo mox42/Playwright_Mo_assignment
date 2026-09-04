@@ -1,8 +1,6 @@
 import { test, expect } from '../../src/fixtures/pageFixtures';
 import loginData from '../../Testdata/loginData.json';
 
-
-
 test.describe('SauceDemo - Login', () => {
   test('TC_UI_001 - Valid Login', async ({ page, loginPage, productsPage }) => {
     await loginPage.open();
