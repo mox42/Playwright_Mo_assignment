@@ -16,6 +16,7 @@ export default defineConfig({
   use: {
     trace: 'on-first-retry',
     headless: false,
+    screenshot: 'only-on-failure',
     launchOptions: {
       args: ['--start-maximized'],
     },
